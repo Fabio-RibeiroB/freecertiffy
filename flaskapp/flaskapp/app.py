@@ -3,11 +3,8 @@ import cert_blueprint_routes
 import login_blueprint_routes
 import users_blueprint_routes
 import logging
-
+import os
 app = Flask(__name__)
-
-# config.py has environment variables for ProdConfig/DevConfig
-app.config.from_object("config.DevConfig")
 
 # Align logging between gunicorn and flask
 gunicorn_logger = logging.getLogger("gunicorn.error")
@@ -20,15 +17,15 @@ if logging.getLevelName(gunicorn_logger.level) != "NOTSET":
         format="playpit %(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s",
     )
 else:
-    #  if gunicorn settings dont direct, use config.py
-    LEVEL = app.config["LEVEL"]
+    #  if gunicorn settings dont direct
+    LEVEL = os.environ["LEVEL"]
     logging.basicConfig(
         format="freecertiffy %(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s",
     )
     logging.getLogger().setLevel(eval("logging." + LEVEL))
 
 # Using Session for logins and authorisation
-app.secret_key = b"secret"
+app.secret_key = os.environ['SECRET_KEY']
 SESSION_TYPE = "filesystem"
 SESSION_PERMANENT = False
 

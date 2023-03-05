@@ -13,6 +13,7 @@ import logging
 import modules.users.readwrite_validusers
 from modules.authentication import get_user_role_db, validate_user_role
 from passlib.context import CryptContext
+import os
 
 logging.basicConfig(level=logging.WARN)
 logging.debug("program users")
@@ -26,9 +27,7 @@ ctx = CryptContext(
 )
 roles = ["admin", "read"]
 
-from dotenv import dotenv_values
-
-config_data = dotenv_values(".env")
+#from dotenv import dotenv_values
 
 
 @users_blueprint_routes.route("/users", methods=["GET"])
@@ -244,14 +243,14 @@ from email.mime.multipart import MIMEMultipart
 
 
 def mail_password_changed(username, email, password):
-    sender_email = config_data["DEFAULT_CONTACT"]
+    sender_email = os.environ["DEFAULT_CONTACT"]
     receiver_email = email
     logging.getLogger().setLevel(logging.DEBUG)
     logging.debug("mailing %s about %s " % (username, email))
     logging.getLogger().setLevel(logging.WARN)
 
     message = MIMEMultipart("alternative")
-    message["Subject"] = f" Password Change on {config_data['DEFAULT_HOST']}"
+    message["Subject"] = f" Password Change on {os.environ['DEFAULT_HOST']}"
     message["From"] = sender_email
     message["To"] = receiver_email
     text = f"""\
@@ -285,7 +284,7 @@ Thank-you
     # Create secure connection with server and send email
     context = ssl.create_default_context()
     try:
-        server = smtplib.SMTP(config_data["SMTPHOST"])
+        server = smtplib.SMTP(os.environ["SMTPHOST"])
         server.set_debuglevel(0)
         server.sendmail(sender_email, receiver_email, message.as_string())
         server.quit()

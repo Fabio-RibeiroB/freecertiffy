@@ -4,17 +4,27 @@ from flask import flash, render_template
 from dotenv import dotenv_values
 import logging
 
-config_data = dotenv_values(".env")
+import os
+logging.basicConfig(level=logging.DEBUG)
+logging.debug("program readwrite_validusers")
+logging.captureWarnings(True)
+logging.getLogger().setLevel(logging.DEBUG)
+import re
 
-client = MongoClient(config_data["CONNECTSTRING"])
+#config_data = dotenv_values(".env")
+MONGO_INITDB_ROOT_USERNAME=os.environ["MONGO_INITDB_ROOT_USERNAME"]
+MONGO_INITDB_ROOT_PASSWORD=os.environ["MONGO_INITDB_ROOT_PASSWORD"]
+if os.environ['ENVIRONMENT'] == 'DEVELOPMENT':
+    CONNECTSTRING=os.environ['CONNECTSTRING_DEVELOPMENT']
+else:
+    CONNECTSTRING=os.environ['CONNECTSTRING_PRODUCTION']
+CONNECTSTRING=re.sub("//.*@","//" + MONGO_INITDB_ROOT_USERNAME + ":" + MONGO_INITDB_ROOT_PASSWORD + "@", CONNECTSTRING)
+logging.debug(f"modules/users/readwrite_validusers.py CONNECTSTRING={CONNECTSTRING}")
+
+client = MongoClient( CONNECTSTRING )
 db = client.freecertiffy
 collection = db.users
 
-logging.basicConfig(level=logging.WARN)
-logging.debug("program readwrite_validusers")
-logging.captureWarnings(True)
-
-logging.getLogger().setLevel(logging.DEBUG)
 
 def read_user_records_db() -> list:
     result = collection.find({})

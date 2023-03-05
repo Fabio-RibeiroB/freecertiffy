@@ -3,20 +3,28 @@ from pymongo import MongoClient, ReturnDocument
 from flask import flash, render_template
 import datetime
 import re
+import os
 
-from dotenv import dotenv_values
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logging.debug("module readwrite")
+logging.captureWarnings(True)
 
-config_data = dotenv_values(".env")
+#from dotenv import dotenv_values
+#config_data = dotenv_values(".env")
+MONGO_INITDB_ROOT_USERNAME=os.environ["MONGO_INITDB_ROOT_USERNAME"]
+MONGO_INITDB_ROOT_PASSWORD=os.environ["MONGO_INITDB_ROOT_PASSWORD"]
+if os.environ['ENVIRONMENT'] == 'DEVELOPMENT':
+    CONNECTSTRING=os.environ['CONNECTSTRING_DEVELOPMENT']
+else:
+    CONNECTSTRING=os.environ['CONNECTSTRING_PRODUCTION']
+CONNECTSTRING=re.sub("//.*@","//"+ MONGO_INITDB_ROOT_USERNAME + ":" + MONGO_INITDB_ROOT_PASSWORD + "@", CONNECTSTRING)
+logging.debug(f'modules/cert/readwrite.py CONNECTSTRING = {CONNECTSTRING}')
 
-client = MongoClient(config_data["CONNECTSTRING"])
+client = MongoClient(CONNECTSTRING)
 db = client.freecertiffy
 collection = db.certificates
 
-import logging
-
-logging.basicConfig(level=logging.WARN)
-logging.debug("module readwrite")
-logging.captureWarnings(True)
 
 
 def read_records_db():

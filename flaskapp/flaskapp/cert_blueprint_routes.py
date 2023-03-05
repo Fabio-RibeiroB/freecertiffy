@@ -40,8 +40,6 @@ def index():
         flash("Not logged in", "info")
         return redirect(url_for("login_blueprint_routes.login"))
 
-    """ you can only use current_app in the context of a request"""
-    current_app.config.from_object("config.ProdConfig")
     logging.debug("This is @cert_blueprint_routes.index()")
     results = request.args.get("cert")
     certs = modules.cert.readwrite.read_records_db()

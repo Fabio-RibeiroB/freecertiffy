@@ -6,30 +6,27 @@
   - with the container volume mongodb
 
 # Fun Facts about the database admin passwords:
-  - There has to be an admin user set to protect mongodatabase.
-  - These are set in the docker-compose.yaml to initialise the database, and in flaskapp/flaskapp/,env for the app to refer to it.
-  - It's easiest to change these BEFORE you run it up obviously.
+  - There has to be an admin user and password to protect the mongo database.
+  - You  set these in **myenv.env**
 
 # Mongo Database essentials
   - The mongo database is called "freecertiffy" and has two collections: "users" and "certificates"
-  - The "users" database needs a default entry using this  __insert_user_record_to_freecertiffy.py__ once the containers are up
+  - The "users" collection needs a default entry using this  __insert_user_record_to_freecertiffy.py__ once the containers are up
+    (This is explained below as the sequence of bringing up the containers is outlined.)
 
-
-# So from the beginning:
-   - prepare your user "admin" password for the mongo database in docker-compose.yaml and flaskapp/flaskapp/.env
-   - prepare the script "utility_insert_admin_user.py" in this directory for your initial admin login
-
-# Manually make the docker volume once:
-   - docker volume make freecertiffy_mongo
-
-# build
+# From the top Maestro
+## Edit __myenv.env__
+  - prepare your user "admin" password for the mongo database in __myenv.env__
+## Make your volume
+  ```
+        docker volume make freecertiffy_mongo
+  ```
+## Build the container images
 Now lets run __docker-compose build__ to  make the three images.
-
-# up
+## Bring the containers  up
 Now run __docker-compose up -d__ to run the containers.
 
-# ps
-List the containers:
+## List the containers:
 ```
  docker container ps
 
@@ -39,21 +36,21 @@ a39453821858   bradymd/flaskapp   "gunicorn -b 0.0.0.0…"   About a minute ago 
 e76cc1acf1bc   mongo              "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:27017->27017/tcp   freecertiffy-mongo-1
 ```
 
-# Set the user password in freecertiffy
+## Initialise the user collection 
 So now we need a record in the mongo database for an initial user.
-So this problem here is you have to run it on the freecertiffy container
-``
+Find your container ID and run this
+```
     docker exec -it a39453821858  ./insert_user_record_to_freecertiffy.py
 ```
-# Now login
-
-Now login to http://localhost:90
+## Now login
+  - Now login to http://localhost:90, the default login is admin/admin.
+  - Go into user management and change it.
 
 # Preserving your data
-
 As long as you don't delete the volume the data should be ok even if you destroy the containers. 
+From the docker host you can still contact the database with mongosh  and monoexport and mongodump.
 
-# Delete everything except the volume
+# Test it by deleting everything except the volume
 ```
 	docker ps --filter name=freecertiffy-mongo-1 -q |xargs docker rm -f 
 	docker ps --filter name=freecertiffy-redis-1 -q |xargs docker rm -f 
@@ -63,13 +60,13 @@ As long as you don't delete the volume the data should be ok even if you destroy
 	docker-compose images  -q | xargs docker image rm 
 ```
 
-# Build and up everything
+# And Build the images and containers and bring them up
 ```
 	docker-compose build
 	docker-compose up -d
 ```
 
-and you can login and your data is still there.
+And as configured you can login to http://loaclhost:90 your data is still there.
 
 
 
