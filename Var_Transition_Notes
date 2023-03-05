@@ -1,0 +1,6 @@
+
+A generic app for distributiuon has to NOT take utilise an __.env__  file into the app but has use variables.
+
+docker run --env-file ./.env   image .
+
+

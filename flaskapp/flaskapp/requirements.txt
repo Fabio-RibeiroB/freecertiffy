@@ -1,0 +1,12 @@
+click
+dnspython
+Flask
+itsdangerous
+Jinja2
+MarkupSafe
+passlib
+pymongo
+python-dotenv
+Werkzeug
+gunicorn
+bcrypt

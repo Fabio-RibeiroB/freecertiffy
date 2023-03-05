@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content  %}
+<div class="container">   
+  <h1>Certificate</h1>
+  <div class="row">
+      <div class="col">
+        <h3>Add</h3>
+         <hr>
+      </div>
+  </div>
+  {% include "message.html" %}
+  
+  <table id="data" class="table">
+    <thread></thread>
+    <div class="mb-3 mt-3">
+     <tr>
+     <td>
+      <form  action = "{{ request.path }}" method = "post">
+          <div class="form-group">
+	          <label  for = "url"
+                    class="control-label h5">
+                  URL
+            </label>
+            <font color="red">{{addhelp['url']}}</font>
+             <input type = "text" 
+                  id = "url"  
+                  name = "url"
+                  class="form-control" 
+		              value = "{{cert['url']}}"
+		              placeholder = "example.com" />
+          </div>
+     </td>
+     </tr>
+     <tr>
+     <td>
+          <div class="form-group">
+            <label for = "port" 
+                   class="control-label form-label h5">
+                   Port 
+            </label>
+            <font color="red">{{addhelp['port']}}</font>
+
+          </div>
+             <input type = "text" 
+                    id = "port" 
+                    name = "port"
+                    class="form-control"
+		                value = "{{cert["port"]}}"
+                    placeholder = "443" />
+       </td>
+       </tr>
+       <tr>
+       <td>
+         <div class="form-group">
+             <label for = "Contact"
+                    class="control-label form-label h5">
+                    Contact
+             </label>
+         </div>
+             <input  type = "text" 
+                    id = "contact" 
+                    name = "contact"
+                    class="form-control"
+		                value = "{{cert["contact"]}}"
+                    placeholder = "email@gmail.com" />
+             <input  type = "hidden" 
+                    id = "daysToGo" 
+                    name = "daysToGo"
+                    class="form-control"
+		                value =  -1 />
+     </td>
+     </tr>
+     </div> <!-- mb-3 mt-3-->
+  </table>	 
+	<table>
+      <tr>
+      <td>
+          <div class="mb-3">
+               <input type = "submit" 
+                     class="btn btn-primary" 
+                     value = "Add" />
+            </div>
+      </form>
+      </td>
+      <td>
+      <form method="get" 
+            action="{{url_for('cert_blueprint_routes.index')}}">
+              <div class="mb-3">
+                   <input  type = "submit" 
+                           class="btn btn-primary" 
+                           value = "Home"/>   
+		          </div>
+       </form>
+		 </td>
+     </tr>
+  </table>
+</div> <!-- class=container -->      
+{% endblock content  %}

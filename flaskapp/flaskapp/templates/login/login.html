@@ -1,0 +1,68 @@
+ {% extends "base.html" %}
+{% block content  %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Login to FreeCertiffy </h1>
+            <hr>
+        </div>
+    </div> <!-- row -->
+    <form action = '{{url_for("login_blueprint_routes.authenticate")}}' method='POST'>
+    <div class="row mb-3">
+        <div class="col">
+            <label  for="username"  
+                    class="form-label h3">
+                    Username:
+            </label>
+            <input  type="text"  
+                    id="username" 
+                    name="username" 
+                    class="form-control" 
+                    placeholder="guest" 
+                    value="" 
+                    size="12" 
+            />
+        </div> <!-- col -->
+     </div> <!-- row --> 
+     <div class="row mb-3">
+       <div class="col">
+            <label  for="password" 
+                    class="form-label h3">
+                    Password:
+            </label>
+            <input  type = "password" 
+                    id = "password"
+                    name = "password"
+                    class ="form-control" 
+                    placeholder = "guest123"
+                    value = "" 
+                    size=20
+            />
+        </div> <!-- col -->
+     </div> <!-- row -->
+     <div class="row mb-3">
+        <div class="col">
+            <div class="mt-3">
+              <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </div> <!-- col -->
+     </div> <!-- class="row" -->
+     </form>
+
+    <div class="row mt-3">
+            <div class="col">
+                {% for category, message in get_flashed_messages(with_categories = true) %}
+                    {% if category == 'error' %}
+                        <div class = "alert alert-error">
+                    {% elif category == 'warning'  %}
+                        <div class = "alert alert-warning">
+                    {% else %}
+                        <div class = "alert alert-info">
+                    {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+   </div> 
+</div> <!-- container -->
+{% endblock %}

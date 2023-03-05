@@ -1,0 +1,35 @@
+version: '6.1'
+
+services:
+  mongo:
+      image: mongo
+      #restart: always
+      env_file:
+          - myenv.env
+      #environment:
+            #- MONGO_INITDB_ROOT_USERNAME=admin
+            #- MONGO_INITDB_ROOT_PASSWORD=bonky
+      ports:
+        - 27017:27017
+      stdin_open: true
+      tty: true
+      volumes:
+        - mongo:/data/db
+  flaskapp:
+      image: bradymd/flaskapp
+      #restart: always
+      env_file:
+        - myenv.env
+      build: flaskapp
+      ports:
+        - 90:8000
+      stdin_open: true
+      tty: true
+  _redis:
+      image: redis
+networks:
+  default:
+    name: freecertiffylan
+volumes:
+   mongo:
+

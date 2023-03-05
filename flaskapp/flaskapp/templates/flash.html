@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content  %}
+<div class="container">
+<h1>FreeCertiffy News Flash</h1>
+<h3>{{ header }}<h3>
+{% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+                <li>    {{message}}  </li>
+                {% endfor %}
+          {% endif %}
+        {% endwith %}
+<form   action= {{ url_for("users_blueprint_routes.index") }}
+        method="GET">
+    <button     type="submit" 
+                value="Home" 
+                class="btn btn-primary">Home</button>
+</form>
+</div>
+{% endblock %}

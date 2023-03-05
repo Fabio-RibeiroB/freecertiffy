@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content  %}
+<div class="container">   
+  <h1>Certificate</h1>
+        <div class="row">
+          <div class="col">
+            <h3>Edit the contact field</h3>
+            <hr>
+          </div>
+        </div>
+  {% include "message.html" %}
+  <p>It only makes sense to edit contact. To change the URL or Port you have to delete the record.</p>
+  <hr/>
+   <form  action = "{{ request.path }}" 
+             method = "post">
+         <div class="mb-3">
+            <label  for = "URL" 
+                    class="form-label h3">
+                    URL 
+            </label>
+            <input type = "text" 
+                id = "url"  
+                name = "url"
+                class="form-control" 
+                readonly
+		style="border: 0px;"
+                value="{{ cert['url'] }}"/>
+         </div>
+         <div class="mb-3">
+            <label for = "port" 
+                class="form-label h3">
+                Port
+            </label>
+            <input type = "text" 
+                id = "port" 
+                name = "port"
+                class="form-control"
+                readonly
+		style="border: 0px;"
+                value="{{cert['port']}}">
+         </div>
+         <div class="mb-3">
+            <label  for = "contact"
+                    class="form-label h3">
+                    Contact
+            </label> 
+            <input type = "text" 
+                id = "contact"  
+                name = "contact"
+                class="form-control" 
+                value="{{ cert['contact'] }}"/>
+	 </div>
+	 <div class="row"><div class="col">
+	 <table><tr><td>
+             <div class="mb-3">
+                <button type = "submit" 
+                    class="btn btn-primary" 
+                    name= "update_button"
+                    value = "update_button">
+                    Update
+                 </button>
+              </div>
+      </form>
+      <form method="get" 
+        action="{{url_for('cert_blueprint_routes.index')}}">
+         <div class="mb-3">
+        <input  type = "submit" 
+                class="btn btn-primary" 
+                value = "Home" />
+	 </div>
+      </form>
+      </td></tr></table>
+      </div></div>
+</div> <!-- class=container -->      
+{% endblock %}

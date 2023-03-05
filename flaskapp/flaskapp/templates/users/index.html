@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content  %}
+<div class="container">
+  <h1>FreeCertiffy</h1>
+        <div class="row">
+          <div class="col">
+            <h2>{{ header }} </h3>
+          </div>
+        </div>
+{% include "message.html" %}
+        <div class="row"> 
+          <div class="col">
+            <table id="data" class="table table-striped">
+              <thread>
+              <tr>
+                 <th>Select</th>
+                 <th>Username</th>
+                 <th>Role</th>
+                 <th>Full Name</th>
+                 <th>Email</th>
+               </tr>
+               </thread>
+            {% for user in valid_users %}
+               <div class="mt-3">
+                <tr>
+		<td><form action={{ url_for("users_blueprint_routes.edit") }} method="GET">  <button type="submit" value="{{user['username']}}" class="btn btn-secondary">edit</button> </td>
+               <td>{{user['username']}}<input type="hidden" id="username" value="{{user['username']}}" name="username"></td>
+               </td><td> {{user['role']}} </td><td> {{user['fullname']}}</td><td> {{user['email']}}</td></div></form></tr>
+            </div> <!-- mb-3 mt-3 -->
+            {% endfor %}
+              </table>
+        </div> <!-- col -->
+       </div> <! -- row -->
+
+<div class="row">
+  <div class="col">
+    <table>
+        <tr>
+         <td>
+          <form action={{url_for("users_blueprint_routes.add")}}
+                method="GET"
+           >
+            <button type="submit" 
+                    value="add" 
+                    class="btn btn-primary me-2">Add</button>
+          </form>
+         </td>
+         <td>
+          <form action={{url_for("cert_blueprint_routes.index")}} method="GET">
+             <button   type="submit" 
+                value="Home" 
+                class="btn btn-primary me-2">Home</button>
+          </form>
+         </td>
+        </tr>
+       </table>
+   </div> <!-- col -->
+  </div> <!-- row -->
+
+</div> <!-- container -->
+{% endblock %}
+

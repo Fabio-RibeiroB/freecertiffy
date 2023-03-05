@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content  %}
+<div class="container">
+<div class="row">
+  <div class="col">
+<h1>FreeCertiffy</h1>
+<hr>
+  <div>
+</div>
+
+<h2>{{ header }} </h2>
+{% include "message.html" %}
+    <table id="data" class="table table-striped">
+       <div class="mb-3 mt-3">
+          <form action={{url_for('users_blueprint_routes.update')}} 
+                method="POST">
+     <tr><td>Username:</td><td>{{user['username']}}</td></tr>
+            <input type="hidden" name="username" value={{user['username']}}>
+     <tr> <td>Role:</td>
+      <td>{{user['role']}}
+           <select name="role" id="role">
+             <option     name="role" 
+                         value={{user['role']}}>{{user['role']}}
+             </option>
+             <option     name="role" 
+                         value="admin">admin</option>
+             <option     name="role" 
+                         value="read">read</option>
+      </td>
+     </tr>
+     <tr>
+      <td>Fullname:</td>
+      <td>  <input type="text" 
+                    name="fullname" 
+                    value="{{user['fullname']}}">
+      </td>
+      <tr>
+       <td>Email:</td>
+       <td><input   type="text" 
+                    name="email" 
+                    value="{{user['email']}}">
+        </td>
+      </tr>
+        <tr>
+          <td>Password Reset:</td>
+          <td><input type="text" 
+                     name="password" 
+                     value=""><br>Leave blank to keep existing password
+          </td>
+      </tr>
+     <button    class="btn btn-primary mb-3 me-2" 
+                type="submit" 
+                value="update" 
+                >Update</button>
+    </form>
+    <form   action={{url_for('users_blueprint_routes.delete')}} 
+            method="GET">
+        <input  type="hidden" 
+                name="username" 
+                value={{user['username']}}>
+        <button class="btn btn-danger mb-3 me-2" 
+                type="submit" 
+                value="delete" 
+                >Delete</button>
+    </form>
+    </div> <!-- mb-3 mt-3--!>
+    </table>
+
+    <form   action={{url_for('users_blueprint_routes.index')}} 
+            method="GET">
+        <div class="mb-3 mt-3">
+            <button     type="submit" 
+                        value="Users" 
+                        class="btn btn-primary">User Management</button>
+        </div>
+    </form>
+</div> <!-- container -->
+{% endblock %}
+
