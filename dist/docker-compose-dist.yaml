@@ -1,0 +1,44 @@
+#version: '6.1'
+services:
+  mongo:
+      container_name: freecertiffy_mongo
+      image: mongo
+      #restart: always
+      env_file:
+          - myenv-dist.env
+      ports:
+        - 27017:27017
+      stdin_open: true
+      tty: true
+      volumes:
+        - mongo:/data/db
+  flaskapp:
+      container_name: freecertiffy_flaskapp
+      image: bradymd/flaskapp
+      #restart: always
+      env_file:
+        - myenv-dist.env
+      #build: flaskapp
+      ports:
+        - 90:8000
+      stdin_open: true
+      tty: true
+  redis:
+      container_name: freecertiffy_redis
+      image: redis
+  initialise-user:
+    container_name: freecertiffy_runonce
+    image: bradymd/flaskapp
+    env_file:
+      - myenv-dist.env
+    command: '/bin/bash -c "sleep 5; ./insert_user_record_to_freecertiffy.py"'
+    depends_on:
+      - mongo
+    profiles:
+      - runonce
+networks:
+  default:
+    name: freecertiffylan
+volumes:
+  mongo:
+    name: freecertiffy-mongo
