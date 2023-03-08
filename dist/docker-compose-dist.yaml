@@ -1,7 +1,6 @@
-#version: '6.1'
 services:
   mongo:
-      container_name: freecertiffy_mongo
+      container_name: freecertiffy-mongo
       image: mongo
       #restart: always
       env_file:
@@ -13,21 +12,23 @@ services:
       volumes:
         - mongo:/data/db
   flaskapp:
-      container_name: freecertiffy_flaskapp
+      container_name: freecertiffy-flaskapp
       image: bradymd/flaskapp
       #restart: always
       env_file:
         - myenv-dist.env
       #build: flaskapp
       ports:
-        - 90:8000
+        - 30002:8000
       stdin_open: true
       tty: true
   redis:
-      container_name: freecertiffy_redis
+      container_name: freecertiffy-redis
       image: redis
+      expose:
+        - "6379"
   initialise-user:
-    container_name: freecertiffy_runonce
+    container_name: freecertiffy-runonce
     image: bradymd/flaskapp
     env_file:
       - myenv-dist.env
@@ -36,6 +37,9 @@ services:
       - mongo
     profiles:
       - runonce
+    # needed for kompose
+    expose:
+      - "8000"
 networks:
   default:
     name: freecertiffylan

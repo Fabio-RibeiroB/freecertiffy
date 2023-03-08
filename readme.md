@@ -1,25 +1,19 @@
 # FreeCertiffy
 ## Running this program
-All you need is the instructions in the dist directory.
+All you need to try this out is the dist directory.
 
-Everything else in this repository is for the code for the flaskapp itself.
-
-You can use this to also run the containers and have access to the code.
-
+Everything else in this repository is if you want access to the flaskapp code or want to work out what it's doing.
 
 # docker-compose.yaml here is to build two containers:
-  - flaskapp is the main program freecertiffy
-  - mongo container for the database
-  - with the container volume mongodb
+  - freecertiffy_flaskapp is the flaskapp container
+  - freecertiffy_mongo is the database with volume freecertiffy_mongo
 
 # Fun Facts about the database admin passwords:
   - There has to be an admin user and password to protect the mongo database.
-  - You  set these in **myenv.env**
+  - These are set in **myenv.env**
 
 # Mongo Database essentials
   - The mongo database is called "freecertiffy" and has two collections: "users" and "certificates"
-  - The "users" collection needs a default entry using this  __insert_user_record_to_freecertiffy.py__ once the containers are up
-    (This is explained below as the sequence of bringing up the containers is outlined.)
 
 # From the top Maestro
 ## Edit __myenv.env__
@@ -30,6 +24,7 @@ The runonce profile will do run the initialisation of the mongo user database.
 ```
     docker-compose --profile runonce up -d
 ```
+This runonce profile is to run certiffy_flaskkapp witha insert program to initialise the user colllection - so you can login.
 
 ## List the containers:
 ```
@@ -47,7 +42,7 @@ cfcf8da62250   mongo              "docker-entrypoint.s…"   About a minute ago 
 As long as you don't delete the volume the data should be ok even if you destroy the containers. 
 From the docker host you can still contact the database with mongosh  and monoexport and mongodump.
 
-# Test it by deleting everything except the volume
+## Test it by deleting everything except the volume
 ```
         docker-compose stop
         docker container ls -a --filter name=freecertiffy_mongo -q |xargs docker container rm -f 
@@ -57,15 +52,11 @@ From the docker host you can still contact the database with mongosh  and monoex
         docker image  rm bradymd/flaskapp  mongo redis
         #docker volume rm freecertiffy_mongo
 ```
-
-# And re-build the flaskapp image and bring them up
+Have a look at Makefile for further examples. eg
+``
+        make destroy
+        make build
 ```
-	docker-compose build
-	docker-compose up -d
-```
-
-And as configured you can login to http://loaclhost:90 your data is still there.
-
 
 # Now for Developing it
 ## You need the Source Code
@@ -73,7 +64,7 @@ And as configured you can login to http://loaclhost:90 your data is still there.
     git clone git@github.com:bradymd/freecertiffy.git
 ```
 
-## python environment
+## establish python environment
 So one time:
 ```
     cd flaskapp/flaskapp
@@ -83,7 +74,7 @@ So one time:
 ```
 From now on 
 ```
-. ./source_me
+.   ./source_me
 ```
 or
 ```
