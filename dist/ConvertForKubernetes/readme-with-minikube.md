@@ -97,7 +97,7 @@ Was fully expecting it to be accessible on port 90 here but this didn't happen.
 And the volume is not peristent
 
 ## New service to make flaskapp type NodePort
-Edit flaskapp-service.yaml and set the spec to "type: NodePort"
+On Linux (not Darwin or Windows or WSL), edit flaskapp-service.yaml and set the spec to "type: NodePort"
 ```
 spec:
   type: NodePort
