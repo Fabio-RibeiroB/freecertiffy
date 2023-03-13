@@ -85,6 +85,7 @@ mongo-64c55d6cf5-l7567             0/1     Pending                      0       
 redis-f758d554b-n4zzh              1/1     Running                      0          5m51s   10.244.0.4   minikube   <none>           <none>
 ```
 
+
 ```
 kubectl get services -A
 NAMESPACE     NAME              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                  AGE
@@ -98,6 +99,42 @@ kube-system   kube-dns          ClusterIP   10.96.0.10      <none>        53/UDP
 
 Was fully expecting it to be accessible on port 90 here but this didn't happen.
 And the volume is not peristent
+
+## New service to make flaskapp type NodePort
+On Linux (not Darwin or Windows or WSL), edit flaskapp-service.yaml and set the spec to "type: NodePort"
+```
+spec:
+  type: NodePort
+  ports:
+    - name: "30002"
+      port: 8000
+      nodePort: 30002
+      #targetPort: 8000
+```
+   - the port 8000 is exposed to other nodes in the cluster
+   - the nodeport 30002 is exposed outside the cluster
+   - targetport 8000 forwards would forward request to other pods of the same label
+
+So apply the edited yaml file
+```
+kubectl apply -f flaskapp-service.yaml
+```
+And you can see the "NodePort" and "8000:30002/TCP"
+```
+kubectl get svc
+NAME              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+flaskapp          NodePort    10.106.166.35   <none>        8000:30002/TCP   121m
+initialise-user   ClusterIP   10.96.170.195   <none>        8000/TCP         121m
+kubernetes        ClusterIP   10.96.0.1       <none>        443/TCP          20h
+mongo             ClusterIP   10.97.134.62    <none>        27017/TCP        121m
+redis             ClusterIP   10.108.157.96   <none>        6379/TCP         121m
+
+```
+
+It is accessible now now on the external IP on port 30002
+```
+minikube ip
+```
 
 ## Connect to the app using minikube tunnel
 ```
@@ -113,4 +150,12 @@ Apply
 Delete
 ```
 	kubectl delete -f myenv-dist-env-configmap.yaml,mongo-persistentvolumeclaim.yaml,freecertiffylan-networkpolicy.yaml,flaskapp-service.yaml,mongo-service.yaml,redis-service.yaml,initialise-user-service.yaml,flaskapp-deployment.yaml,mongo-deployment.yaml,redis-deployment.yaml,initialise-user-deployment.yaml
+```
+
+# Bonus Notes
+```
+kubectl get deploy
+kubectl get deploy flaskapp -o yaml > flaskapp-deployment.yaml
+kubectl get services
+kubectl get deploy flaskapp -o yaml > flaskapp-service.yaml
 ```
