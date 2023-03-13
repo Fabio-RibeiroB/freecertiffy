@@ -2,10 +2,14 @@
 ## convert the docker-compose file  with kompose
 On MacOS
 ```
-brew install kompose
+    brew install kompose
+    brew install minikube
+    brew install kubernetes-cli
 ```
 ```
     minkube start
+or
+    minikube start --addons=dashboard --addons=metric-server --addons=ingress --addons=ingress-dns
 ```
 
 ## Convert your docker-compose file
