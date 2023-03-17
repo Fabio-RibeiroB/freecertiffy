@@ -1,22 +1,22 @@
 # FreeCertiffy
 ## Running this program
-All you need to try this out is the dist directory.
+All you need to try this out is the dist directory which has the docker-compose-dist.yaml and my-env.env file.
 
 Everything else in this repository is if you want access to the flaskapp code or want to work out what it's doing.
 
-# docker-compose.yaml here is to build two containers:
+## docker-compose.yaml here is to build two containers:
   - freecertiffy_flaskapp is the flaskapp container
   - freecertiffy_mongo is the database with volume freecertiffy_mongo
 
-# Fun Facts about the database admin passwords:
+## Fun Facts about the database admin passwords:
   - There has to be an admin user and password to protect the mongo database.
   - These are set in **myenv.env**
 
-# Mongo Database essentials
+## Mongo Database essentials
   - The mongo database is called "freecertiffy" and has two collections: "users" and "certificates"
 
-# From the top Maestro
-## Edit __myenv.env__
+## From the top Maestro
+### Edit __myenv.env__
   - prepare your user "admin" password for the mongo database in __myenv.env__
 
 ## Run docker-compose with the runonce profile
@@ -38,7 +38,7 @@ cfcf8da62250   mongo              "docker-entrypoint.s…"   About a minute ago 
   - login to http://localhost:90 with the default login is admin/admin.
   - Go into user management and change it.
 
-# Preserving your data
+## Preserving your data
 As long as you don't delete the volume the data should be ok even if you destroy the containers. 
 From the docker host you can still contact the database with mongosh  and monoexport and mongodump.
 
@@ -58,8 +58,8 @@ Have a look at Makefile for further examples. eg
         make build
 ```
 
-# Now for Developing it
-## You need the Source Code
+## Now for Developing it
+### You need the Source Code
 ```
     git clone git@github.com:bradymd/freecertiffy.git
 ```
