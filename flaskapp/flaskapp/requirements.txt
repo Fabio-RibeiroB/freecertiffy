@@ -10,3 +10,5 @@ python-dotenv
 Werkzeug
 gunicorn
 bcrypt
+requests
+pyopenssl

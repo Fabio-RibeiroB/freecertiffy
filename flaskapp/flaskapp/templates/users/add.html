@@ -1,71 +1,91 @@
 {% extends "base.html" %}
 {% block content  %}
 <div class="container">
-    <h1>FreeCertiffy</h1>
+{% include "title.html" %}
     <h2>{{ header }} </h3>
-        {% include "message.html" %}
-        <form action={{url_for("users_blueprint_routes.submituser")}} method="POST">
-            <div class="mb-3 mt-3">
-                <table id="data" class="table table-striped">
-                <thread></thread>
-                <tr>
-                    <td>Username:</td>
-                    <td>
-                     <input  type="text" 
-                            value="{{user['username']}}" 
-                            name="username"/>
-                            <font color="red">{{addhelp['username']}}</font>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Role:</td>
-                    <td>
-                      <select           name="role" id="role">
+        <form class="was-validated" action={{url_for("users_blueprint_routes.submituser")}} method="POST">
+            <div class="row mb-3 mt-3">
+                <div class="col-sm-3">
+                    <div class="form-floating">
+                        <input  required 
+                                type="text" 
+                                class="form-control"
+                                value="{{user['username']}}" 
+                                name="username"/>
+                                <font color="red">{{addhelp['username']}}</font>
+                        <label for="username">Username</label>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Please fill out this field</div>
+                    </div> <!-- form-floating-->
+                </div> <!--  col -->
+            </div> <!-- row -->
+            <div class="row mb-3 mt-3">
+                <div class="col-sm-2">
+                        Role
+                        <select   class="form-select"      name="role" id="role">
                             <option     name="role" 
                                         value="admin">admin</option>
                             <option     name="role" 
                                         value="read">read</option>
-                    </td>
-                </tr>
-                <tr>
-                     <td>Fullname:</td>
-                    <td>
-                        <input    type="text" 
-                                  name="fullname" 
-                                  value="{{user['fullname']}}">
-                                  <font color="red">{{addhelp['fullname']}}</font>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Email:</td>
-                    <td>
-                     <input   type="text" 
-                            name="email" 
-                            value="{{user['email']}}">
-                            <font color="red">{{addhelp['email']}}</font>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Password:</td>
-                    <td>
-                         <input type="text" 
-                                name="password" 
-                                value="{{user['password']}}">
-                                <font color="red">{{addhelp['password']}}</font>
-		            </td>
-                </tr>
-                </table>
-		        <table>
-                <tr>
-                    <td>
+                                        </select>
+                </div> <!--  col -->
+            </div> <!-- row -->
+             <div class="row mb-3 mt-3">
+                <div class="col-sm-4">
+                        <div class="form-floating">
+                                <input  required    
+                                        type="text" 
+                                        class="form-control"
+                                        name="fullname" 
+                                        value="{{user['fullname']}}"/>
+                                        <font color="red">{{addhelp['fullname']}}</font>
+                                <label for="fullname">Full Name</label>
+                                <div class="valid-feedback">Valid.</div>
+                                <div class="invalid-feedback">Please fill out this field</div>
+                         </div> <!-- form-floating-->
+                </div> <!--  col -->
+            </div> <!-- rows -->
+            <div class="row mb-3 mt-3">
+                <div class="col-sm-4">
+                        <div class="form-floating">
+                                <input  required
+                                        type="email" 
+                                        class="form-control"
+                                        name="email" 
+                                        value="{{user['email']}}"/>
+                                         <font color="red">{{addhelp['email']}}</font>
+                                    <label for="email">Email</label>
+                                    <div class="valid-feedback">Valid.</div>
+                                    <div class="invalid-feedback">Please fill out this field</div>
+                        </div> <!-- form-floating-->
+                </div> <!--  col -->
+            </div> <!-- rows -->
+            <div class="row mb-3 mt-3">
+                <div class="col-sm-4">
+                        <div class="form-floating">
+                                 <input required 
+                                        type="password" 
+                                        class="form-control"
+                                        name="password" 
+                                        value="{{user['password']}}"/>
+                                        <font color="red">{{addhelp['password']}}</font>
+                                    <label for="password">Password</label>
+                                    <div class="invalid-feedback">Password more than 6 characters</div>
+                         </div> <!-- form-floating-->
+                </div> <!--  col -->
+            </div> <!-- rows -->
+            <div class="row mb-3 mt-3">
+                <div class="col-sm-4">
                         <button    class="btn btn-primary" 
                                    type="submit" 
+                                   class="form-control"
                                    value="add" 
-                                   class="btn btn-primary">Add</button>
-                   </div> <!-- the mb-3 mt-3 -->
-                </form>
+                                   class="btn btn-primary">Add</button>               
+                   </div> <!-- col -->
+            </div> <!-- row -->
+         </form>
 
-                <form   action="{{url_for('users_blueprint_routes.index')}}" 
+        <form   action="{{url_for('users_blueprint_routes.index')}}" 
                         method="GET">
                         <div class="mb-3 mt-3">
                              <button type="submit" v
@@ -74,7 +94,7 @@
                                     User Management
                             </button>
                         </div>
-                </form> 
+        </form> 
 </div> <!-- container -->
 {% endblock %}
 

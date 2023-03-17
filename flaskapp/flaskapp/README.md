@@ -12,17 +12,13 @@ So this is sort of a template to quickstart my projects.
 
 # The structure of this template program
 ```
-    flask-template/
-        config.py
-            class Config:
-            class ProdConfig(Config):
-            class DevConfig(Config):
-        .env
+    ../../myenv.env
             SECRET_KEY
             CONNECTSTRING
             DEFAULT_CONTACT
             DEFAULT_HOST
             SMTPHOST
+    flaskapp/
         app.py
         modules/authentication.py
                     def validate_user_db(username,passwordd),
@@ -30,14 +26,14 @@ So this is sort of a template to quickstart my projects.
                     def get_user_role_db(username)
         templates/{base,flash,message}.html
         utility_insert_admin_user.py
-        student_blueprint_routes.py
+        cert_blueprint_routes.py
                     def index():
                     def add():
                     def search():
                     def edit():
                     def delete():
-        templates/student/{index,add,edit}.html
-        modules/student/readwrite.py
+        templates/cert/{index,add,edit}.html
+        modules/cert/readwrite.py
                     def read_records_db():
                     def read_record_db(record):
                     def read_record_db_ext(record):
@@ -62,7 +58,6 @@ So this is sort of a template to quickstart my projects.
 				    def delete_user_record_db(record):
 				    def update_user_record_db(record):
 				    def update_user_record_db_ext(record):
-        # about login/logout
         login_blueprint_routes.py
                     def login():
                     def logout():
@@ -80,12 +75,7 @@ python3 -m pip install -r requirements.txt
 # Starting with flask for development
 ```
 . ./source_me
-flask run
-# or any of the following:
-  flask --app app run
-  flask --app wsgi run
-  python3  wsgi.py
-  python3 -m flask run
+  flask --env-file ../../myenv.env  run
 ```
 
 # app.py
@@ -93,7 +83,7 @@ In a small flask program, we can put all our routes/views in app.py. In this pro
 
 # Blueprints
 Our blueprints files are to keep routes/view/functions related to databases or distinct functional areas:
-    - student records
+    - cert records
     - users management
     - login
 

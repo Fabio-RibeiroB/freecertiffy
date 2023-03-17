@@ -1,0 +1,25 @@
+<div  class="card mb-3" >
+    <div class="card-body">
+           <h1 class="card-title">Free Certiffy - SSL Certificate Management</h1>
+    </div>
+    <div class="card-header">status bar: user=<i>{{session["username"]}}</i>,role=<i>{{session["role"]}}</i></div>
+    <div class="card-footer">
+        {% for category, message in get_flashed_messages(with_categories = true) %}
+            {% if category=="error" %}
+                <div class = "alert alert-error border-error mb-0" role="alert">
+            {% elif category=="warning"  %}
+                <div class = "alert alert-warning border-warning mb-0" role="alert">
+            {% else %}
+                <div class = "alert alert-info border-info mb-0" role="alert">
+            {% endif %}
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% with message = get_flashed_messages() %}
+        {% if message %}
+        {% else %}
+            <div class = "alert alert-info border-info mb-0" role="alert">&nbsp; Messages: none</div>
+        {% endif %}
+        {% endwith %}
+        </div> <!-- card footer  -->
+</div>

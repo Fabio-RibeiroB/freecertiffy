@@ -11,9 +11,11 @@ from flask import (
 )
 import modules.cert.readwrite
 import modules.cert.checkexpiry
+import modules.cert.grade_ssllabs
 from modules.authentication import validate_user_role
-import logging
+from modules import mail
 import json
+import logging
 
 cert_blueprint_routes = Blueprint(
     "cert_blueprint_routes",
@@ -48,6 +50,11 @@ def index():
 
 @cert_blueprint_routes.route("/add", methods=["GET", "POST"])
 def add():
+    try:
+        session["username"]
+    except:
+        flash("Not logged in", "info")
+        return redirect(url_for("login_blueprint_routes.login"))
     if not validate_user_role(session["username"], session["role"], "admin"):
         flash(f'Your user {session["role"]} is not authorised to add users', "warning")
         return redirect(url_for("cert_blueprint_routes.index"))
@@ -62,10 +69,6 @@ def add():
             cert["port"] = request.form["port"]
         except:
             pass
-        try:
-            cert["contact"] = request.form["contact"]
-        except:
-            pass
         addhelp={}
         if ( not request.form["url"] ):
             addhelp["url"]="*"
@@ -74,7 +77,6 @@ def add():
         if (
                 not request.form["url"]
                 or not request.form["port"]
-                or not request.form["contact"]
         ):
             flash("Please enter all the fields", "warning")
             return render_template("cert/add.html", cert=cert,addhelp=addhelp)
@@ -88,8 +90,13 @@ def add():
                daysToGo,expiryDate = modules.cert.checkexpiry.checkcert(cert)
                cert['daysToGo']=daysToGo
                cert['expiryDate']=expiryDate
+               if expiryDate == -1 and daysToGo== -1:
+                    cert['status'] = 'down'
+               else:  
+                    cert['status'] = 'up'
             except:
                daysToGo  = -1
+               cert['status'] = 'down'
             if modules.cert.readwrite.insert_record_db(cert):
                 flash("Record was successfully added", 'success')
             else:
@@ -100,12 +107,19 @@ def add():
 
 @cert_blueprint_routes.route("/search", methods=["GET"])
 def search():
+    logging.getLogger().setLevel(logging.WARN)
+
+    try:
+        session["username"]
+    except:
+        flash("Not logged in", "info")
+        return redirect(url_for("login_blueprint_routes.login"))
     cert={}
     try:
         request.args.get('url')
         cert['url'] = request.args.get('url') 
     except: 
-        flash("Please enter a url search string", "info")
+        flash("Please enter a url search string", "warning")
         return redirect(url_for("cert_blueprint_routes.index"),url=None,port=port)
     if request.args.get('port'):
         cert['port'] = request.args.get('port') 
@@ -118,7 +132,7 @@ def search():
     elif len(result) > 1:
         flash(f"Multiple records found for {cert['url']}", "warning")
     elif len(result) == 0:
-        flash("Not found", "info")
+        flash("Not found", "warning")
         result = {}
     certs = modules.cert.readwrite.read_records_db()
     return render_template("cert/index.html", result=result, certs=certs)
@@ -126,6 +140,14 @@ def search():
 
 @cert_blueprint_routes.route("/edit", methods=["GET", "POST"])
 def edit():
+    try:
+        session["username"]
+    except:
+        flash("Not logged in", "info")
+        return redirect(url_for("login_blueprint_routes.login"))
+    if not validate_user_role(session["username"], session["role"], "admin"):
+        flash(f'Your user {session["role"]} is not authorised to add users', "warning")
+        return redirect(url_for("cert_blueprint_routes.index"))
     if request.method == "GET":
         cert = { "url": request.args.get("url"), 
              "port": request.args.get("port"),
@@ -155,6 +177,14 @@ def edit():
 
 @cert_blueprint_routes.route("/delete", methods=["POST"])
 def delete():
+    try:
+        session["username"]
+    except:
+        flash("Not logged in", "info")
+        return redirect(url_for("login_blueprint_routes.login"))
+    if not validate_user_role(session["username"], session["role"], "admin"):
+        flash(f'Your user {session["role"]} is not authorised to add users', "warning")
+        return redirect(url_for("cert_blueprint_routes.index"))
     cert = {
         "url": request.form["url"],
         "port": request.form["port"],
@@ -176,7 +206,15 @@ def delete():
 
 @cert_blueprint_routes.route("/check", methods=["POST"])
 def check():
-    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger().setLevel(logging.WARN)
+    try:
+        session["username"]
+    except:
+        flash("Not logged in", "info")
+        return redirect(url_for("login_blueprint_routes.login"))
+    if not validate_user_role(session["username"], session["role"], "admin"):
+        flash(f'Your user {session["role"]} is not authorised to add users', "warning")
+        return redirect(url_for("cert_blueprint_routes.index"))
     cert = {
         "url": request.form["url"],
         "port": request.form["port"]
@@ -186,16 +224,15 @@ def check():
                daysToGo,expiryDate = modules.cert.checkexpiry.checkcert(cert)
             except:
                 logging.debug('failed to call checkexpiry')
-                flash('Failed to check')
+                flash('Failed to check',"warning")
                 return redirect(url_for("cert_blueprint_routes.index", cert=cert))
             if daysToGo >=0:
                  cert['status'] = "up"
                  cert['expiryDate'] = expiryDate
             else:
                  cert['status'] = "down"
-            cert['daysToGo'] = daysToGo
             if modules.cert.readwrite.update_record_db_ext(cert):
-                 logging.warning("ran the update %s" % cert)
+                 logging.debug("check(): callling update_record_db_ext %s" % cert)
                  flash(f"Record {cert['url']} was updated ", 'info')
             else:
                  logging.debug("failed the update db_ext")
@@ -204,6 +241,62 @@ def check():
 
 @cert_blueprint_routes.route("/checkall", methods=["POST"])
 def checkall():
-    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger().setLevel(logging.WARN)
+    try:
+        session["username"]
+    except:
+        flash("Not logged in", "info")
+        return redirect(url_for("login_blueprint_routes.login"))
+    if not validate_user_role(session["username"], session["role"], "admin"):
+        flash(f'Your user {session["role"]} is not authorised to add users', "warning")
+        return redirect(url_for("cert_blueprint_routes.index"))
     modules.cert.readwrite.recalculateAll()
     return redirect(url_for("cert_blueprint_routes.index" ))
+
+@cert_blueprint_routes.route("/grade", methods=["POST"])
+def grade():
+    logging.getLogger().setLevel(logging.WARN)
+    try:
+        session["username"]
+    except:
+        flash("Not logged in", "info")
+        return redirect(url_for("login_blueprint_routes.login"))
+    if not validate_user_role(session["username"], session["role"], "admin"):
+        flash(f'Your user {session["role"]} is not authorised to add users', "warning")
+        return redirect(url_for("cert_blueprint_routes.index"))
+    cert = {
+        "url": request.form["url"],
+        "port": request.form["port"]
+    }
+    modules.cert.grade_ssllabs.grade_ssllabs(cert['url'])
+    return redirect(url_for("cert_blueprint_routes.index" ))
+
+@cert_blueprint_routes.route("/mail", methods=["POST"])
+def mail():
+    logging.getLogger().setLevel(logging.DEBUG)
+    try:
+        session["username"]
+    except:
+        flash("Not logged in", "info")
+        return redirect(url_for("login_blueprint_routes.login"))
+    if not validate_user_role(session["username"], session["role"], "admin"):
+        flash(f'Your user {session["role"]} is not authorised to add users', "warning")
+        return redirect(url_for("cert_blueprint_routes.index"))
+    cert = {
+        "url": request.form["url"],
+        "port": request.form["port"],
+    }
+    if request.form["mail_button"] == "mail_button":
+        result = modules.cert.readwrite.read_record_db(cert)
+        if len(result) == 1:
+            try:
+                result['contact']
+            except:
+                flash("There is no contact to mail","warning")
+                return redirect(url_for("cert_blueprint_routes.index" ))
+            for r in result:
+                modules.mail.mail_warning(r['contact'], r['url'], 
+                                          r['daysToGo'],
+                                          r['expiryDate'],
+                                          r['port'])
+        return redirect(url_for("cert_blueprint_routes.index" ))

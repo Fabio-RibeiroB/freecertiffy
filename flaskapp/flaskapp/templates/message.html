@@ -1,16 +1,15 @@
-          <div  class="card mb-3" >
-             <div class="card-body">
-                    <h5 class="card-title">Status: User {{session["username"]}}, role of {{session["role"] }}</h5>
-        
+ <div  class="card mb-3" >
+    <div class="card-body">
         <div class="row">
             <div class="col">
+                <div class="card-header">
                 {% for category, message in get_flashed_messages(with_categories = true) %}
                     {% if category=="error" %}
                         <div class = "alert alert-error">
                     {% elif category=="warning"  %}
                         <div class = "alert alert-warning">
                     {% else %}
-                        <div class = "alert alert-info">
+                        <div class = "card-header alert alert-info">
                     {% endif %}
                         {{ message }}
                     </div>
@@ -19,10 +18,11 @@
                 {% if message %}
                 {% else %}
                     <div class = "alert alert-info">
-                         &nbsp;
+                         &nbsp; Messages: none
                     </div>
                 {% endif %}
                 {% endwith %}
+                </div> <!-- card title -->
             </div> <!--  class="col"> -->
         </div> <!-- class="row" -->
     </div>      

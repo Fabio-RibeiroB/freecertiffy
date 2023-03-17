@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block content  %}
 <div class="container">
-  <h1>FreeCertiffy</h1>
+{% include "title.html" %}
+
         <div class="row">
           <div class="col">
             <h2>{{ header }} </h3>
           </div>
         </div>
-{% include "message.html" %}
         <div class="row"> 
           <div class="col">
             <table id="data" class="table table-striped">

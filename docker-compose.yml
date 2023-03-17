@@ -13,6 +13,8 @@ services:
       tty: true
       volumes:
         - mongo:/data/db
+      profiles:
+        - mongo
   flaskapp:
       container_name: freecertiffy_flaskapp
       image: bradymd/flaskapp

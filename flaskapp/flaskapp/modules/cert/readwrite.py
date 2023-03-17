@@ -37,7 +37,7 @@ def read_records_db():
 
 
 def read_record_db(record):
-    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger().setLevel(logging.WARN)
     count = collection.count_documents(record)
     if record['port'] == "*":
         record['port'] = record['port'].replace('*','.*')
@@ -54,7 +54,8 @@ def read_record_db(record):
         return_list.append(x)
         if count == 1:
             return [return_list[0]]
-    logging.warn("read_record_db %d %s" % (count, str(record)))
+    logging.debug("read_record_db %d %s" % (count, str(record)))
+    return_list = sorted(return_list, key=lambda d: d['daysToGo'])
     return return_list
 
 
@@ -72,7 +73,7 @@ def read_record_db_ext(record):
 
 # We used to rewrite the whole list of records, now its just one dict record
 def insert_record_db(record):
-    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger().setLevel(logging.WARN)
     count = collection.count_documents({"url": record["url"], "port": record["port"] })
     result = collection.find({"url": record["url"], "port": record["port"] })
     if count == 0:
@@ -86,7 +87,7 @@ def insert_record_db(record):
 
 
 def delete_record_db(record):
-    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger().setLevel(logging.WARN)
     count = collection.count_documents({"url": record["url"]})
     result = collection.find({"url": record["url"]})
     if count >= 1:

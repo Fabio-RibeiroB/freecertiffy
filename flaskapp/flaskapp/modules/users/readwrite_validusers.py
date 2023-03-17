@@ -11,7 +11,6 @@ logging.captureWarnings(True)
 logging.getLogger().setLevel(logging.DEBUG)
 import re
 
-#config_data = dotenv_values(".env")
 MONGO_INITDB_ROOT_USERNAME=os.environ["MONGO_INITDB_ROOT_USERNAME"]
 MONGO_INITDB_ROOT_PASSWORD=os.environ["MONGO_INITDB_ROOT_PASSWORD"]
 if os.environ['ENVIRONMENT'] == 'DEVELOPMENT':
