@@ -1,6 +1,8 @@
 # FreeCertiffy
 ## Running this program
-All you need to try this out is the dist directory which has the docker-compose-dist.yaml and my-env.env file.
+All you need to try this out is the dist directory which has the docker-compose-dist.yaml and myenv-dist.env file.
+* docker-compose-dist.yaml: running freecertiffy in a container
+* myenv-dist.env: config file, you will need to add your passwords, emails etc
 
 Everything else in this repository is if you want access to the flaskapp code or want to work out what it's doing.
 
