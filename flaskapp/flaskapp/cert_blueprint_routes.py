@@ -274,6 +274,7 @@ def grade():
 @cert_blueprint_routes.route("/mail", methods=["POST"])
 def mail():
     logging.getLogger().setLevel(logging.DEBUG)
+    logging.debug(f"Debug message from /mail")
     try:
         session["username"]
     except:
@@ -287,7 +288,11 @@ def mail():
         "port": request.form["port"],
     }
     if request.form["mail_button"] == "mail_button":
+        logging.debug("Attempting to read record...")
         result = modules.cert.readwrite.read_record_db(cert)
+        logging.debug("Got result")
+        logging.debug(type(result))
+        logging.debug(f"{len(result)} {result}")
         if len(result) == 1:
             try:
                 result['contact']
