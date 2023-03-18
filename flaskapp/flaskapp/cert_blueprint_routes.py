@@ -287,7 +287,7 @@ def mail():
         "url": request.form["url"],
         "port": request.form["port"],
     }
-     if request.form["mail_button"] == "mail_button":
+    if request.form["mail_button"] == "mail_button":
         result = modules.cert.readwrite.read_record_db(cert)
         if len(result) == 1:
             try:
