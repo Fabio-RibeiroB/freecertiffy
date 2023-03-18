@@ -273,7 +273,7 @@ def grade():
 
 @cert_blueprint_routes.route("/mail", methods=["POST"])
 def mail():
-    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger().setLevel(logging.WARN)
     logging.debug(f"Debug message from /mail")
     try:
         session["username"]
@@ -287,21 +287,21 @@ def mail():
         "url": request.form["url"],
         "port": request.form["port"],
     }
-    if request.form["mail_button"] == "mail_button":
-        logging.debug("Attempting to read record...")
+     if request.form["mail_button"] == "mail_button":
         result = modules.cert.readwrite.read_record_db(cert)
-        logging.debug("Got result")
-        logging.debug(type(result))
-        logging.debug(f"{len(result)} {result}")
         if len(result) == 1:
             try:
-                result['contact']
+                result[0]['contact']
             except:
                 flash("There is no contact to mail","warning")
                 return redirect(url_for("cert_blueprint_routes.index" ))
             for r in result:
-                modules.mail.mail_warning(r['contact'], r['url'], 
+                try:
+                    r['contact']
+                    modules.mail.mail_warning(r['contact'], r['url'], 
                                           r['daysToGo'],
                                           r['expiryDate'],
                                           r['port'])
+                except:
+                    flash(f"No contact to mail for {r['url']}")
         return redirect(url_for("cert_blueprint_routes.index" ))
