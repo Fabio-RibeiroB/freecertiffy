@@ -1,4 +1,6 @@
 # What is this about?
+Here I will describe the project structure and advise on development.
+
 A small flask program is no big deal structurally as its all based around a few files and directories. Bigger ones need to use blueprints, separate template directories, and user management for login purposes.
 
 So this is sort of a template to quickstart my projects.
@@ -79,7 +81,7 @@ python3 -m pip install -r requirements.txt
 ```
 
 # app.py
-In a small flask program, we can put all our routes/views in app.py. In this program we are using blueprints, so our app.py is quite small. It mainly registers the blueprints.
+In a small flask program, we can put all our routes/views in app.py. In this program we are using blueprints, so our app.py is quite small. It mainly registers the blueprints. Default port for flaskapps is port 5000.
 
 # Blueprints
 Our blueprints files are to keep routes/view/functions related to databases or distinct functional areas:
@@ -104,8 +106,6 @@ kill -HUP $(cat gunicorn.pid)
 '''capture-output''' is how we get the syslog into the gunicorn.error file.
 
 I was using the main calling app as a module as in app/__init__.py but found that using it with gunicorn was difficult with not much support on the web.
-
-
 
 # Using Session
 This is surprisingly straight forward. Create and initialise in app.py the Session then in the blueprints, you can use session['username'] to see if its set (the user has logged in.
