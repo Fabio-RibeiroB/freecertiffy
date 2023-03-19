@@ -6,7 +6,7 @@ import re
 import os
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.WARN)
 logging.debug("module readwrite")
 logging.captureWarnings(True)
 
@@ -52,11 +52,9 @@ def read_record_db(record):
     return_list = []
     for x in result:
         return_list.append(x)
-        if count == 1:
-            return [return_list[0]]
     logging.debug("read_record_db %d %s" % (count, str(record)))
     return_list = sorted(return_list, key=lambda d: d['daysToGo'])
-    return return_list
+    return return_list,len(return_list)
 
 
 def read_record_db_ext(record):

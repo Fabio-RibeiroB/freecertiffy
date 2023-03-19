@@ -64,22 +64,24 @@ def my_dns(trial, quiet):
 
 
 def mail_warning(contact, url, daystogo, expiry_date, port):
+    logging.getLogger().setLevel(logging.WARN)
     global DEFAULT_CONTACT
     global SMTPHOST
-    expiry_date = expiry_date.isoformat()
+    logging.debug(f"hello from mail_warning the  expiry_date is {expiry_date}")
+    try:
+        expiry_date = expiry_date.isoformat()
+    except:
+        # It can be set to -1
+        expiry_date = "NaN"
     if mail == False:
         print(
             "not mailing %s about %s port %s daystogo %s  "
             % (contact, url, port, daystogo)
         )
         return
-
     sender_email = DEFAULT_CONTACT
     receiver_email = contact
-    logging.getLogger().setLevel(logging.DEBUG)
     logging.debug("mailing %s about %s %s" % (contact, url, daystogo))
-    logging.getLogger().setLevel(logging.WARN)
-
     message = MIMEMultipart("alternative")
     message["Subject"] = "TLS Cert expires " + str(daystogo) + """ days """ + url
     message["From"] = sender_email
@@ -142,7 +144,6 @@ Thank-you
 </html>
 """
     )
-
     # Turn these into plain/html MIMEText objects
     part1 = MIMEText(text, "plain")
     part2 = MIMEText(html, "html")

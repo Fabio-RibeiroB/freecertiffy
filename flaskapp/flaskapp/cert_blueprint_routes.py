@@ -125,13 +125,13 @@ def search():
         cert['port'] = request.args.get('port') 
     else:
         cert['port'] = "443"
-    result = modules.cert.readwrite.read_record_db(cert)
-    if len(result) == 1:
+    result,count = modules.cert.readwrite.read_record_db(cert)
+    logging.debug(f"debug search {count}, {result}")
+    if count == 1:
         pass
-        logging.debug(f"Record found {cert}")
-    elif len(result) > 1:
+    elif count > 1:
         flash(f"Multiple records found for {cert['url']}", "warning")
-    elif len(result) == 0:
+    elif count == 0:
         flash("Not found", "warning")
         result = {}
     certs = modules.cert.readwrite.read_records_db()
@@ -162,7 +162,6 @@ def edit():
         try:
             request.form["update_button"]
             if request.form["update_button"] == "update_button":
-                logging.debug("About to update")
                 logging.debug(f"About to update {cert}")
                 if modules.cert.readwrite.update_record_db_ext(cert):
                     logging.warning("ran the update %s" % cert)
@@ -273,8 +272,8 @@ def grade():
 
 @cert_blueprint_routes.route("/mail", methods=["POST"])
 def mail():
-    logging.getLogger().setLevel(logging.WARN)
-    logging.debug(f"Debug message from /mail")
+    logging.getLogger().setLevel(logging.DEBUG)
+    logging.debug(f"Debug x message from /mail")
     try:
         session["username"]
     except:
@@ -288,20 +287,24 @@ def mail():
         "port": request.form["port"],
     }
     if request.form["mail_button"] == "mail_button":
-        result = modules.cert.readwrite.read_record_db(cert)
-        if len(result) == 1:
+        result,count = modules.cert.readwrite.read_record_db(cert)
+        #  read_record can return a dict or a list of dicts, so len of 1 is a dict
+        '''
+        if count == 1:
             try:
-                result[0]['contact']
+                result['contact'] == ""
             except:
                 flash("There is no contact to mail","warning")
                 return redirect(url_for("cert_blueprint_routes.index" ))
-            for r in result:
-                try:
-                    r['contact']
+        '''
+        for r in result:
+                logging.debug(f"debugging mail {r['contact']}")
+                if r['contact'] != '':
+                    logging.debug(f"debugging mail {r}")
                     modules.mail.mail_warning(r['contact'], r['url'], 
                                           r['daysToGo'],
                                           r['expiryDate'],
                                           r['port'])
-                except:
+                else:
                     flash(f"No contact to mail for {r['url']}")
         return redirect(url_for("cert_blueprint_routes.index" ))
