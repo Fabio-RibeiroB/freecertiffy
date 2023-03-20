@@ -41,8 +41,3 @@ Add users with roles. Add url and ports.
 ```
 	docker-compose --f docker-compose-dist.yaml down
 ```
-
-## The code for flaskapp
-```
-  git clone github.com/bradymd/freecertiffy.git
-```
