@@ -1,5 +1,8 @@
 # FreeCertiffy
-This project is under development. It is being worked on. It might be more useful for people learning python/flask/blueprints or people looking at useful certificate management code with python. So, lower your expectations all who pass through here.
+This project is under development. It might be useful for learning python/flask/blueprints or to study code related to certificate management. 
+
+The grading is using the Qualys SSL LABS scanner - “SSL/TLS server assessment service provided in partnership with Qualys SSL Labs (www.ssllabs.com).”
+As such it can only grade external facing websites.
 
 FreeCertiffy is a free SSL Certificate Manager program. It’s a Flask Python App deployed in a container with a second container – a Mongo Database backend in support (experimenting with redis also). Read more here [https://aardvark.herts.ac.uk/deploying-freecertiffy/](https://aardvark.herts.ac.uk/deploying-freecertiffy/). FreeCertiffy is aimed at those who want to track Certificate expiry dates and has added functionality like users and the ability to send email reminders.
 
