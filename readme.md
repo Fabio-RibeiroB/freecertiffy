@@ -3,7 +3,7 @@ This project is under development. It is being worked on. It might be more usefu
 
 FreeCertiffy is a free SSL Certificate Manager program. It’s a Flask Python App deployed in a container with a second container – a Mongo Database backend in support (experimenting with redis also). Read more here [https://aardvark.herts.ac.uk/deploying-freecertiffy/](https://aardvark.herts.ac.uk/deploying-freecertiffy/). FreeCertiffy is aimed at those who want to track Certificate expiry dates and has added functionality like users and the ability to send email reminders.
 
-![Screenshot of FreeCertiffy in use listing my certificates](./img/freecertiffy-screenshot.png)
+![Screenshot of FreeCertiffy in use listing my certificates](./freecertiffy/blob/main/flaskapp/flaskapp/screenshots/mainpage_search.png)
 
 ## Running this program
 All you need is in the `dist` directory which has the docker-compose-dist.yaml and myenv-dist.env file.
