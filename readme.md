@@ -10,7 +10,7 @@ All you need is in the `dist` directory which has the docker-compose-dist.yaml a
 * `docker-compose-dist.yaml`: running freecertiffy in a container
 * `myenv-dist.env`: config file, you will need to add your passwords, emails etc
 * 
-Read [dist/readme-dist.md] as a starting point to run the containers.
+Read [./freecertiffy/dist/readme-dist.md](./dist/readme-dist.md) as a starting point to run the containers.
 
 Everything else in this repository is if you want access to the flaskapp code or want to work out what it's doing.
 Read more about running the flaskapp below and in [freecertiffy/flaskapp/flaskapp/README.md](./flaskapp/flaskapp/README.md)
