@@ -9,6 +9,7 @@ FreeCertiffy is a free SSL Certificate Manager program. It’s a Flask Python Ap
 All you need is in the `dist` directory which has the docker-compose-dist.yaml and myenv-dist.env file.
 * `docker-compose-dist.yaml`: running freecertiffy in a container
 * `myenv-dist.env`: config file, you will need to add your passwords, emails etc
+* 
 Read [dist/readme-dist.md] as a starting point to run the containers.
 
 Everything else in this repository is if you want access to the flaskapp code or want to work out what it's doing.
