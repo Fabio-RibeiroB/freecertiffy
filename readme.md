@@ -1,11 +1,12 @@
 # FreeCertiffy
+This project is under development. It is being worked on. It might be more useful for people learning python/flask/blueprints or people looking at useful certificate management code with python. So, lower your expectations all who pass through here.
+
 FreeCertiffy is a free SSL Certificate Manager program. It’s a Flask Python App deployed in a container with a second container – a Mongo Database backend in support (experimenting with redis also). Read more here [https://aardvark.herts.ac.uk/deploying-freecertiffy/](https://aardvark.herts.ac.uk/deploying-freecertiffy/). FreeCertiffy is aimed at those who want to track Certificate expiry dates and has added functionality like users and the ability to send email reminders.
 
 ![Screenshot of FreeCertiffy in use listing my certificates](./img/freecertiffy-screenshot.png)
 
-
 ## Running this program
-All you need to out is program is the `dist` directory which has the docker-compose-dist.yaml and myenv-dist.env file.
+All you need is in the `dist` directory which has the docker-compose-dist.yaml and myenv-dist.env file.
 * `docker-compose-dist.yaml`: running freecertiffy in a container
 * `myenv-dist.env`: config file, you will need to add your passwords, emails etc
 
@@ -18,17 +19,16 @@ Read more about running the flaskapp below and in [freecertiffy/flaskapp/flaskap
 
 ## Fun Facts about the database admin passwords:
   - There has to be an admin user and password to protect the mongo database.
-  - These are set in **myenv.env**
+  - These are set in the environment file
 
 ## Mongo Database essentials
   - The mongo database is called "freecertiffy" and has two collections: "users" and "certificates"
 
 ## Recap, from the top Maestro!
-
 What you need to do to get freecertiffy running successfully...
 
 ### Edit __myenv.env__
-  - prepare your user "admin" password for the mongo database in __myenv.env__
+  - prepare your user "admin" password for the mongo database in the env file
 
 ## Run docker-compose with the runonce profile
 The runonce profile will do run the initialisation of the mongo user database.
@@ -42,11 +42,11 @@ This runonce profile is to run certiffy_flaskkapp with an insert program to init
 $ docker ps
 CONTAINER ID   IMAGE              COMMAND                  CREATED              STATUS          PORTS                      NAMES
 cfcf8da62250   mongo              "docker-entrypoint.s…"   About a minute ago   Up 57 seconds   0.0.0.0:27017->27017/tcp   freecertiffy_mongo
-4bc53bb04bda   bradymd/flaskapp   "gunicorn -b 0.0.0.0…"   About a minute ago   Up 57 seconds   0.0.0.0:90->8000/tcp       freecertiffy_flaskapp
+4bc53bb04bda   bradymd/flaskapp   "gunicorn -b 0.0.0.0…"   About a minute ago   Up 57 seconds   0.0.0.0:30002->8000/tcp       freecertiffy_flaskapp
 ```
 
 ## Now login
-  - login to http://localhost:90 with the default login is admin/admin.
+  - login to http://localhost:30002 with the default login is admin/admin.
   - Go into user management and change it.
 
 ## Preserving your data
