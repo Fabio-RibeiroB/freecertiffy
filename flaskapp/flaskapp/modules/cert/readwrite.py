@@ -4,7 +4,7 @@ from flask import flash, render_template
 import datetime
 import re
 import os
-
+from typing import List, Dict, Any, Tuple
 import logging
 logging.basicConfig(level=logging.WARN)
 logging.debug("module readwrite")
@@ -25,9 +25,8 @@ client = MongoClient(CONNECTSTRING)
 db = client.freecertiffy
 collection = db.certificates
 
-
-
-def read_records_db():
+def read_records_db() -> List[Dict[str, Any]]:
+    '''Return list of all certificates from mongo sorted by days to go'''
     result = collection.find({})
     return_list = []
     for x in result:
@@ -36,7 +35,8 @@ def read_records_db():
     return return_list
 
 
-def read_record_db(record):
+def read_record_db(record: Dict[str, Any]) -> Tuple[List[Dict[str, Any]], int]:
+    '''Return specific record and record length'''
     logging.getLogger().setLevel(logging.WARN)
     count = collection.count_documents(record)
     if record['port'] == "*":
@@ -57,7 +57,8 @@ def read_record_db(record):
     return return_list,len(return_list)
 
 
-def read_record_db_ext(record):
+def read_record_db_ext(record: Dict[str, Any]) -> Tuple[List[Dict[str, Any]], int]:
+    '''Return record from url and number of records with url'''
     logging.getLogger().setLevel(logging.WARN)
     count = collection.count_documents({"url": record["url"]})
     result = collection.find({"url": record["url"]})
@@ -70,7 +71,8 @@ def read_record_db_ext(record):
 
 
 # We used to rewrite the whole list of records, now its just one dict record
-def insert_record_db(record):
+def insert_record_db(record: Dict[str, Any]) -> bool:
+    '''Insert record to db and return error if success or fail'''
     logging.getLogger().setLevel(logging.WARN)
     count = collection.count_documents({"url": record["url"], "port": record["port"] })
     result = collection.find({"url": record["url"], "port": record["port"] })
@@ -84,7 +86,8 @@ def insert_record_db(record):
         return False
 
 
-def delete_record_db(record):
+def delete_record_db(record: Dict[str, Any]) -> bool:
+    '''Delte record from db and return error if success or fail'''
     logging.getLogger().setLevel(logging.WARN)
     count = collection.count_documents({"url": record["url"]})
     result = collection.find({"url": record["url"]})
@@ -97,7 +100,8 @@ def delete_record_db(record):
         return False
 
 
-def update_record_db(record):
+def update_record_db(record: Dict[str, Any]) -> bool:
+    '''True if the record was updated successfully, False otherwise and flash error.'''
     logging.getLogger().setLevel(logging.WARN)
     count = collection.count_documents({"url": record["url"]})
     result = collection.find({"url": record["url"]})
@@ -118,7 +122,8 @@ def update_record_db(record):
         return render_template("flash.html", header="function: update_record_db")
 
 
-def update_record_db_ext(record):
+def update_record_db_ext(record: Dict[str, Any]) -> bool:
+    '''True if the record was updated successfully, False otherwise.'''
     logging.getLogger().setLevel(logging.WARN)
     search_term ={ "url": record["url"],"port": record["port"] } 
     count = collection.count_documents( search_term )
@@ -137,7 +142,8 @@ def update_record_db_ext(record):
     else:
         return False
 
-def recalculateAll():
+def recalculateAll() -> bool:
+    '''True if all records were recalculated successfully, False otherwise.'''
     logging.getLogger().setLevel(logging.DEBUG)
     certs = read_records_db()
     for cert in certs:
